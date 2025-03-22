@@ -11,7 +11,7 @@ interface SiteHeaderProps {
 export function SiteHeader({ showLoginButton = true, onLoginClick }: SiteHeaderProps) {
   return (
     <motion.header
-      className="bg-gradient-to-r from-primary to-blue-700 text-white py-4 sticky top-0 z-50 shadow-md"
+      className="bg-gradient-to-r from-primary to-blue-700 text-white py-4 sticky top-0 z-50 shadow-md backdrop-blur-sm bg-opacity-95"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{
@@ -50,14 +50,9 @@ export function SiteHeader({ showLoginButton = true, onLoginClick }: SiteHeaderP
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Button
-              variant="secondary"
-              size="sm"
-              className="flex items-center gap-2 bg-white text-primary hover:bg-white/90 transition-colors shadow-md"
-              onClick={onLoginClick}
-            >
-              <LogIn className="h-4 w-4" />
-              <span>Connexion</span>
+            <Button onClick={onLoginClick} className="btn-gradient hover-lift" size="sm">
+              <LogIn className="mr-1 h-4 w-4" />
+              Connexion
             </Button>
           </motion.div>
         )}

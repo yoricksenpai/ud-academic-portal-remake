@@ -2,13 +2,28 @@
 
 # dependencies
 /node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+/.nyc_output
 
 # next.js
 /.next/
 /out/
+.swc/
 
 # production
 /build
+/dist
+
+# misc
+.DS_Store
+*.pem
+Thumbs.db
+desktop.ini
 
 # debug
 npm-debug.log*
@@ -16,8 +31,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files
-.env*
+# local env files
+.env
+.env*.local
+.env.development
+.env.test
+.env.production
 
 # vercel
 .vercel
@@ -25,4 +44,56 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# IDE - JetBrains (WebStorm, IntelliJ IDEA)
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# IDE - Eclipse
+.classpath
+.project
+.settings/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Prisma
+/prisma/.env
+/prisma/db.sqlite
+/prisma/db.sqlite-journal
 .qodo
+
+# Logs
+logs
+*.log
+
+# Cache
+.cache/
+.turbo
+
+# Temporary files
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Service worker
+sw.*
