@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,65 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Student {
+  id           Int           @id @default(autoincrement())
+  studentId    String        @unique
+  firstName    String
+  lastName     String
+  email        String        @unique
+  dateOfBirth  DateTime?
+  enrolledYear Int
+  major        String?
+  enrollments  Enrollment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Instructor {
+  id         Int       @id @default(autoincrement())
+  staffId    String    @unique
+  firstName  String
+  lastName   String
+  email      String    @unique
+  department String
+  courses    Course[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Course {
+  id           Int          @id @default(autoincrement())
+  courseCode   String       @unique
+  title        String
+  description  String?
+  credits      Int
+  semester     String
+  instructorId Int
+  instructor   Instructor   @relation(fields: [instructorId], references: [id])
+  enrollments  Enrollment[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  courseId  Int
+  grade     String?
+  status    Status   @default(ENROLLED)
+  student   Student  @relation(fields: [studentId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, courseId])
+}
+
+enum Status {
+  ENROLLED
+  COMPLETED
+  DROPPED
+  WAITLISTED
 }
