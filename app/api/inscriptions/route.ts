@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
+import studentService from '@/src/services/studentService';
 
 // Type pour les inscriptions
 interface Inscription {
@@ -44,9 +45,13 @@ export async function GET() {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
   }
 
-  // Dans une application réelle, vous filtreriez les inscriptions par userId
-  // Pour la démo, nous renvoyons toutes les inscriptions
-  return NextResponse.json(inscriptionsDB)
+  try {
+    const inscriptions = await studentService.getAllStudents();
+    return NextResponse.json(inscriptions)
+  } catch (error) {
+    console.error("Error fetching inscriptions:", error)
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
+  }
 }
 
 export async function POST(request: Request) {
@@ -58,27 +63,8 @@ export async function POST(request: Request) {
 
   try {
     const data = await request.json()
-
-    // Générer un ID unique pour la nouvelle inscription
-    const newId = `INS-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)
-      .toString()
-      .padStart(3, "0")}`
-
-    const newInscription: Inscription = {
-      id: newId,
-      userId: "1", // Dans une application réelle, ce serait l'ID de l'utilisateur connecté
-      academicYear: data.academicYear,
-      faculty: data.faculty,
-      program: data.program,
-      level: data.level,
-      registrationDate: new Date().toISOString().split("T")[0],
-      status: "pending",
-    }
-
-    // Ajouter la nouvelle inscription à la "base de données"
-    inscriptionsDB.push(newInscription)
-
-    return NextResponse.json(newInscription)
+    const inscription = await studentService.createStudent(data)
+    return NextResponse.json(inscription)
   } catch (error) {
     console.error("Erreur lors du traitement de la requête:", error)
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })

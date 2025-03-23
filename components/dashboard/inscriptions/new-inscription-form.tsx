@@ -1,14 +1,27 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import { useToast } from "@/components/ui/use-toast"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { X, Loader2, FilePlus } from "lucide-react"
+
+const ACADEMIC_YEARS = ["2023-2024", "2024-2025", "2025-2026"]
+const FACULTIES = [
+  "École Nationale Supérieure Polytechnique",
+  "Faculté des Sciences",
+  "Faculté des Sciences Économiques et de Gestion",
+  "Faculté des Lettres et Sciences Humaines"
+]
+const PROGRAMS = {
+  "École Nationale Supérieure Polytechnique": ["Génie Informatique", "Génie Civil", "Génie Électrique", "Génie Mécanique"],
+  "Faculté des Sciences": ["Mathématiques", "Physique", "Chimie", "Biologie"],
+  "Faculté des Sciences Économiques et de Gestion": ["Économie", "Gestion", "Finance", "Marketing"],
+  "Faculté des Lettres et Sciences Humaines": ["Lettres Modernes", "Histoire", "Géographie", "Sociologie"]
+}
+const LEVELS = ["Niveau 1", "Niveau 2", "Niveau 3", "Master 1", "Master 2"]
 
 interface NewInscriptionFormProps {
   onClose: () => void
@@ -16,174 +29,238 @@ interface NewInscriptionFormProps {
 }
 
 export function NewInscriptionForm({ onClose, onSubmit }: NewInscriptionFormProps) {
-  const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
-    academicYear: "2025-2026",
+    studentId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    major: "",
+    enrolledYear: new Date().getFullYear(),
+    academicYear: new Date().getFullYear().toString(),
     faculty: "",
     program: "",
     level: "",
+    dateOfBirth: new Date().toISOString().split('T')[0],
   })
-
-  const handleChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+  const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
+    setIsSubmitting(true)
 
     try {
-      // Validation basique
-      if (!formData.faculty || !formData.program || !formData.level) {
-        throw new Error("Veuillez remplir tous les champs obligatoires")
-      }
+      const response = await fetch('/api/inscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
 
-      // Simuler un délai d'envoi
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      if (!response.ok) throw new Error('Failed to create inscription')
 
-      // Envoyer les données au parent
-      onSubmit(formData)
+      const data = await response.json()
+      onSubmit(data)
+      onClose()
+      
+      toast({
+        title: "Inscription créée",
+        description: "L'inscription a été créée avec succès",
+        variant: "success",
+      })
     } catch (error) {
-      console.error("Erreur lors de la soumission:", error)
+      toast({
+        title: "Erreur",
+        description: "Impossible de créer l'inscription",
+        variant: "destructive",
+      })
     } finally {
-      setIsLoading(false)
+      setIsSubmitting(false)
     }
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: "spring", damping: 20, stiffness: 300 }}
-        className="w-full max-w-lg"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Card className="shadow-xl border-primary/20">
-          <CardHeader className="bg-primary text-white relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-2 top-2 text-white hover:bg-primary-foreground/20"
-              onClick={onClose}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-            <CardTitle className="flex items-center text-xl">
-              <FilePlus className="h-5 w-5 mr-2" />
-              Nouvelle inscription
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="academicYear">Année académique</Label>
-                <Select
-                  value={formData.academicYear}
-                  onValueChange={(value) => handleChange("academicYear", value)}
-                  disabled={isLoading}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner une année académique" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="2025-2026">2025-2026</SelectItem>
-                    <SelectItem value="2026-2027">2026-2027</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-3xl">
+        <DialogHeader>
+          <DialogTitle>Nouvelle inscription</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="studentId">ID Étudiant</Label>
+              <Input
+                id="studentId"
+                placeholder="Ex: ETU-123456"
+                value={formData.studentId}
+                onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="academicYear">Année académique</Label>
+              <Select 
+                value={formData.academicYear}
+                onValueChange={(value) => setFormData({ ...formData, academicYear: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une année" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ACADEMIC_YEARS.map((year) => (
+                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="faculty">Faculté / École</Label>
-                <Select
-                  value={formData.faculty}
-                  onValueChange={(value) => handleChange("faculty", value)}
-                  disabled={isLoading}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner une faculté" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="École Nationale Supérieure Polytechnique">
-                      École Nationale Supérieure Polytechnique
-                    </SelectItem>
-                    <SelectItem value="Faculté des Sciences">Faculté des Sciences</SelectItem>
-                    <SelectItem value="Faculté des Sciences Économiques et de Gestion">
-                      Faculté des Sciences Économiques et de Gestion
-                    </SelectItem>
-                    <SelectItem value="Faculté de Génie Industriel">Faculté de Génie Industriel</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">Prénom</Label>
+              <Input
+                id="firstName"
+                value={formData.firstName}
+                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastName">Nom</Label>
+              <Input
+                id="lastName"
+                value={formData.lastName}
+                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                required
+              />
+            </div>
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="program">Programme / Filière</Label>
-                <Select
-                  value={formData.program}
-                  onValueChange={(value) => handleChange("program", value)}
-                  disabled={isLoading}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner un programme" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Génie Informatique">Génie Informatique</SelectItem>
-                    <SelectItem value="Génie Civil">Génie Civil</SelectItem>
-                    <SelectItem value="Génie Électrique">Génie Électrique</SelectItem>
-                    <SelectItem value="Génie Mécanique">Génie Mécanique</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="faculty">Faculté</Label>
+              <Select
+                value={formData.faculty}
+                onValueChange={(value) => setFormData({ ...formData, faculty: value, program: '' })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une faculté" />
+                </SelectTrigger>
+                <SelectContent>
+                  {FACULTIES.map((faculty) => (
+                    <SelectItem key={faculty} value={faculty}>{faculty}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="level">Niveau</Label>
-                <Select
-                  value={formData.level}
-                  onValueChange={(value) => handleChange("level", value)}
-                  disabled={isLoading}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sélectionner un niveau" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Niveau 1">Niveau 1</SelectItem>
-                    <SelectItem value="Niveau 2">Niveau 2</SelectItem>
-                    <SelectItem value="Niveau 3">Niveau 3</SelectItem>
-                    <SelectItem value="Niveau 4">Niveau 4</SelectItem>
-                    <SelectItem value="Niveau 5">Niveau 5</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter className="flex justify-between border-t p-4">
-            <Button variant="outline" onClick={onClose} disabled={isLoading}>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="program">Programme</Label>
+              <Select
+                value={formData.program}
+                onValueChange={(value) => setFormData({ ...formData, program: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner un programme" />
+                </SelectTrigger>
+                <SelectContent>
+                  {formData.faculty && PROGRAMS[formData.faculty as keyof typeof PROGRAMS].map((program) => (
+                    <SelectItem key={program} value={program}>{program}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="level">Niveau</Label>
+              <Select
+                value={formData.level}
+                onValueChange={(value) => setFormData({ ...formData, level: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner un niveau" />
+                </SelectTrigger>
+                <SelectContent>
+                  {LEVELS.map((level) => (
+                    <SelectItem key={level} value={level}>{level}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="major">Filière</Label>
+              <Input
+                id="major"
+                value={formData.major}
+                onChange={(e) => setFormData({ ...formData, major: e.target.value })}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="dateOfBirth">Date de naissance</Label>
+            <Input
+              id="dateOfBirth"
+              type="date"
+              value={formData.dateOfBirth}
+              onChange={(e) => setFormData({ ...formData, dateOfBirth: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="enrolledYear">Année d'inscription</Label>
+              <Input
+                id="enrolledYear"
+                type="number"
+                value={formData.enrolledYear}
+                onChange={(e) => setFormData({ ...formData, enrolledYear: parseInt(e.target.value) })}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="academicYear">Année académique</Label>
+              <Select 
+                value={formData.academicYear}
+                onValueChange={(value) => setFormData({ ...formData, academicYear: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une année" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ACADEMIC_YEARS.map((year) => (
+                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" type="button" onClick={onClose}>
               Annuler
             </Button>
-            <Button type="submit" onClick={handleSubmit} disabled={isLoading} className="bg-primary">
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Traitement...
-                </>
-              ) : (
-                <>
-                  <FilePlus className="h-4 w-4 mr-2" />
-                  Soumettre
-                </>
-              )}
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Création..." : "Créer"}
             </Button>
-          </CardFooter>
-        </Card>
-      </motion.div>
-    </motion.div>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   )
 }
 

@@ -1,28 +1,48 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { DashboardShell } from "@/components/dashboard/dashboard-shell"
-import { NewInscriptionForm } from "@/components/dashboard/inscriptions/new-inscription-form"
-import { FileEdit, FilePlus, Trash2, Download, Eye, FileText } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { NewInscriptionForm } from "@/components/dashboard/inscriptions/new-inscription-form";
+import {
+  FileEdit,
+  FilePlus,
+  Trash2,
+  Download,
+  Eye,
+  FileText,
+} from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 // Types pour les inscriptions
-type InscriptionStatus = "pending" | "validated" | "rejected"
+type InscriptionStatus = "pending" | "validated" | "rejected";
 
 interface Inscription {
-  id: string
-  academicYear: string
-  faculty: string
-  program: string
-  level: string
-  registrationDate: string
-  status: InscriptionStatus
+  id: string;
+  academicYear: string;
+  faculty: string;
+  program: string;
+  level: string;
+  registrationDate: string;
+  status: InscriptionStatus;
+  studentId?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  major?: string;
+  enrolledYear?: number;
 }
 
 // Animation variants
@@ -35,7 +55,7 @@ const containerVariants = {
       staggerChildren: 0.1,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
@@ -43,44 +63,34 @@ const itemVariants = {
     y: 0,
     opacity: 1,
   },
-}
+};
 
 export function InscriptionsPage() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [showNewInscriptionForm, setShowNewInscriptionForm] = useState(false)
-  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(true);
+  const [showNewInscriptionForm, setShowNewInscriptionForm] = useState(false);
+  const [inscriptions, setInscriptions] = useState<Inscription[]>([]);
+  const { toast } = useToast();
 
-  // Données d'exemple pour les inscriptions
-  const [inscriptions, setInscriptions] = useState<Inscription[]>([])
-
-  // Simuler le chargement des données
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-      setInscriptions([
-        {
-          id: "INS-2024-001",
-          academicYear: "2024-2025",
-          faculty: "École Nationale Supérieure Polytechnique",
-          program: "Génie Informatique",
-          level: "Niveau 3",
-          registrationDate: "15/09/2024",
-          status: "validated",
-        },
-        {
-          id: "INS-2023-042",
-          academicYear: "2023-2024",
-          faculty: "École Nationale Supérieure Polytechnique",
-          program: "Génie Informatique",
-          level: "Niveau 2",
-          registrationDate: "12/09/2023",
-          status: "validated",
-        },
-      ])
-    }, 1500)
+    async function fetchInscriptions() {
+      try {
+        const response = await fetch("/api/inscriptions");
+        if (!response.ok) throw new Error("Failed to fetch inscriptions");
+        const data = await response.json();
+        setInscriptions(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error:", error);
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger la liste des inscriptions",
+          variant: "destructive",
+        });
+      }
+    }
 
-    return () => clearTimeout(timer)
-  }, [])
+    fetchInscriptions();
+  }, [toast]);
 
   // Fonction pour obtenir la couleur du badge selon le statut
   const getStatusBadge = (status: InscriptionStatus) => {
@@ -90,23 +100,23 @@ export function InscriptionsPage() {
           <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
             En attente
           </Badge>
-        )
+        );
       case "validated":
         return (
           <Badge variant="outline" className="bg-green-100 text-green-800">
             Validée
           </Badge>
-        )
+        );
       case "rejected":
         return (
           <Badge variant="outline" className="bg-red-100 text-red-800">
             Rejetée
           </Badge>
-        )
+        );
       default:
-        return <Badge variant="outline">Inconnu</Badge>
+        return <Badge variant="outline">Inconnu</Badge>;
     }
-  }
+  };
 
   const handleNewInscription = (data: any) => {
     // Simuler l'ajout d'une nouvelle inscription
@@ -120,44 +130,51 @@ export function InscriptionsPage() {
       level: data.level,
       registrationDate: new Date().toLocaleDateString("fr-FR"),
       status: "pending",
-    }
+    };
 
-    setInscriptions([newInscription, ...inscriptions])
-    setShowNewInscriptionForm(false)
+    setInscriptions([newInscription, ...inscriptions]);
+    setShowNewInscriptionForm(false);
 
     toast({
       title: "Inscription créée",
       description: "Votre demande d'inscription a été soumise avec succès",
       variant: "success",
-    })
-  }
+    });
+  };
 
   const handleDeleteInscription = (id: string) => {
     // Vérifier si l'inscription peut être supprimée
-    const inscription = inscriptions.find((i) => i.id === id)
+    const inscription = inscriptions.find((i) => i.id === id);
 
     if (inscription?.status === "validated") {
       toast({
         title: "Action impossible",
         description: "Vous ne pouvez pas supprimer une inscription validée",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     // Simuler la suppression
-    setInscriptions(inscriptions.filter((i) => i.id !== id))
+    setInscriptions(inscriptions.filter((i) => i.id !== id));
 
     toast({
       title: "Inscription supprimée",
       description: "L'inscription a été supprimée avec succès",
-    })
-  }
+    });
+  };
 
   return (
     <DashboardShell>
-      <motion.div variants={containerVariants} initial="hidden" animate="visible">
-        <motion.div variants={itemVariants} className="flex justify-between items-center mb-6">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div
+          variants={itemVariants}
+          className="flex justify-between items-center mb-6"
+        >
           <h1 className="text-2xl font-bold">Gestion des inscriptions</h1>
           <Button onClick={() => setShowNewInscriptionForm(true)}>
             <FilePlus className="mr-2 h-4 w-4" />
@@ -184,66 +201,38 @@ export function InscriptionsPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>ID</TableHead>
-                        <TableHead>Année académique</TableHead>
-                        <TableHead className="hidden md:table-cell">Faculté</TableHead>
-                        <TableHead>Programme</TableHead>
-                        <TableHead className="hidden md:table-cell">Niveau</TableHead>
-                        <TableHead className="hidden md:table-cell">Date d'inscription</TableHead>
-                        <TableHead>Statut</TableHead>
-                        <TableHead>Actions</TableHead>
+                        <TableHead>ID Inscription</TableHead>
+                        <TableHead>Nom</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Filière</TableHead>
+                        <TableHead>Année d'inscription</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {inscriptions.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                            Aucune inscription trouvée. Cliquez sur "Nouvelle inscription" pour commencer.
+                          <TableCell
+                            colSpan={5}
+                            className="text-center py-8 text-muted-foreground"
+                          >
+                            Aucune inscription trouvée
                           </TableCell>
                         </TableRow>
                       ) : (
                         inscriptions.map((inscription) => (
                           <TableRow key={inscription.id}>
-                            <TableCell className="font-medium">{inscription.id}</TableCell>
-                            <TableCell>{inscription.academicYear}</TableCell>
-                            <TableCell className="hidden md:table-cell max-w-[200px] truncate">
-                              {inscription.faculty}
+                            <TableCell className="font-medium">
+                              {inscription.studentId || inscription.id}
                             </TableCell>
-                            <TableCell>{inscription.program}</TableCell>
-                            <TableCell className="hidden md:table-cell">{inscription.level}</TableCell>
-                            <TableCell className="hidden md:table-cell">{inscription.registrationDate}</TableCell>
-                            <TableCell>{getStatusBadge(inscription.status)}</TableCell>
+                            <TableCell>{`${inscription.firstName || ""} ${
+                              inscription.lastName || ""
+                            }`}</TableCell>
+                            <TableCell>{inscription.email || ""}</TableCell>
                             <TableCell>
-                              <div className="flex space-x-2">
-                                <Button variant="outline" size="icon" title="Voir les détails">
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="icon"
-                                  disabled={inscription.status === "validated"}
-                                  title="Modifier"
-                                >
-                                  <FileEdit className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="icon"
-                                  title="Télécharger l'attestation"
-                                  disabled={inscription.status !== "validated"}
-                                >
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="icon"
-                                  disabled={inscription.status === "validated"}
-                                  title="Supprimer"
-                                  onClick={() => handleDeleteInscription(inscription.id)}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
+                              {inscription.major || "Non spécifié"}
+                            </TableCell>
+                            <TableCell>
+                              {inscription.enrolledYear || "-"}
                             </TableCell>
                           </TableRow>
                         ))
@@ -258,9 +247,11 @@ export function InscriptionsPage() {
       </motion.div>
 
       {showNewInscriptionForm && (
-        <NewInscriptionForm onClose={() => setShowNewInscriptionForm(false)} onSubmit={handleNewInscription} />
+        <NewInscriptionForm
+          onClose={() => setShowNewInscriptionForm(false)}
+          onSubmit={handleNewInscription}
+        />
       )}
     </DashboardShell>
-  )
+  );
 }
-
