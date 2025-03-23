@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
+import studentService from '@/src/services/studentService';
 
 // Type pour les inscriptions
 interface Inscription {
@@ -44,9 +45,13 @@ export async function GET() {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 })
   }
 
-  // Dans une application réelle, vous filtreriez les inscriptions par userId
-  // Pour la démo, nous renvoyons toutes les inscriptions
-  return NextResponse.json(inscriptionsDB)
+  try {
+    const inscriptions = await studentService.getAllStudents();
+    return NextResponse.json(inscriptions)
+  } catch (error) {
+    console.error("Error fetching inscriptions:", error)
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
+  }
 }
 
 export async function POST(request: Request) {
