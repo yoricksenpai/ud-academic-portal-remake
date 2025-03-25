@@ -81,6 +81,31 @@ export function DashboardSidebar() {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === "/dashboard/admin/cours"}
+                >
+                  <Link href='/dashboard/admin/cours'>
+                    <GraduationCap className='h-4 w-4' />
+                    <span>Cours</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+
+              
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === "/dashboard/instructors"}
+                >
+                  <Link href='/dashboard/instructors'>
+                    <Users className='h-4 w-4' />
+                    <span>Instructeurs</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
 
               <SidebarMenuItem>
                 <SidebarMenuButton
