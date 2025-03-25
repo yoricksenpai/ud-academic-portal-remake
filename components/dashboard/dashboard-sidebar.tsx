@@ -231,35 +231,34 @@ export function DashboardSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        <SidebarFooter className="border-t">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/dashboard/profile"}
-              >
-                <Link href="/dashboard/profile">
-                  <User className="h-4 w-4" />
-                  <span>Mon profil</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/dashboard/settings"}
-              >
-                <Link href="/dashboard/settings">
-                  <Settings className="h-4 w-4" />
-                  <span>Paramètres</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
       </SidebarContent>
+      <SidebarFooter className="border-t">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              isActive={pathname === "/dashboard/profile"}
+            >
+              <Link href="/dashboard/profile">
+                <User className="h-4 w-4" />
+                <span>Mon profil</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              isActive={pathname === "/dashboard/settings"}
+            >
+              <Link href="/dashboard/settings">
+                <Settings className="h-4 w-4" />
+                <span>Paramètres</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 }

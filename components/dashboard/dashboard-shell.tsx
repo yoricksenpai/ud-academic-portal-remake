@@ -120,7 +120,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   return (
     <SidebarProvider>
       <motion.div
-        className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white"
+        className="flex flex-col w-full min-h-screen bg-gradient-to-b from-blue-50 to-white"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -146,9 +146,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         </motion.header>
 
         <div className="flex flex-1">
-          <div className="sticky top-16 h-[calc(100vh-4rem)] overflow-auto">
-            <DashboardSidebar />
-          </div>
+          <DashboardSidebar />
           <SidebarInset className="flex-1">
             <AnimatePresence mode="wait">
               <motion.main
