@@ -58,6 +58,7 @@ export function DashboardSidebar() {
               alt='Photo de profil'
             />
             <AvatarFallback className='bg-primary text-white'>
+
               {userInitials}
             </AvatarFallback>
           </Avatar>
@@ -114,6 +115,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/inscriptions'>
                     <FileText className='h-4 w-4' />
+
                     <span>Inscriptions</span>
                   </Link>
                 </SidebarMenuButton>
@@ -126,6 +128,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/notes'>
                     <BookOpen className='h-4 w-4' />
+
                     <span>Notes</span>
                   </Link>
                 </SidebarMenuButton>
@@ -138,6 +141,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/emploi-du-temps'>
                     <Calendar className='h-4 w-4' />
+
                     <span>Emploi du temps</span>
                   </Link>
                 </SidebarMenuButton>
@@ -150,6 +154,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/paiements'>
                     <CreditCard className='h-4 w-4' />
+
                     <span>Paiements</span>
                   </Link>
                 </SidebarMenuButton>
@@ -162,6 +167,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/bourses'>
                     <Briefcase className='h-4 w-4' />
+
                     <span>Bourses</span>
                   </Link>
                 </SidebarMenuButton>
@@ -174,6 +180,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/bibliotheque'>
                     <Library className='h-4 w-4' />
+
                     <span>Bibliothèque</span>
                   </Link>
                 </SidebarMenuButton>
@@ -193,6 +200,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/cours'>
                     <GraduationCap className='h-4 w-4' />
+
                     <span>Mes cours</span>
                   </Link>
                 </SidebarMenuButton>
@@ -205,6 +213,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/notifications'>
                     <Bell className='h-4 w-4' />
+
                     <span>Notifications</span>
                     <Badge className='ml-auto bg-red-500 text-white'>3</Badge>
                   </Link>
@@ -237,6 +246,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/concours'>
                     <GraduationCap className='h-4 w-4' />
+
                     <span>Concours</span>
                   </Link>
                 </SidebarMenuButton>
@@ -249,6 +259,7 @@ export function DashboardSidebar() {
                 >
                   <Link href='/dashboard/contact'>
                     <MessagesSquare className='h-4 w-4' />
+
                     <span>Contact</span>
                   </Link>
                 </SidebarMenuButton>

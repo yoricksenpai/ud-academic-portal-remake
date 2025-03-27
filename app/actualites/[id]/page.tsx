@@ -1,19 +1,26 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { SiteHeader } from "@/components/navigation/site-header"
-import { MainNav } from "@/components/navigation/main-nav"
-import { SiteFooter } from "@/components/navigation/site-footer"
-import { useAuth } from "@/components/auth/auth-provider"
-import { Calendar, ArrowLeft, Share2, Printer, User, ChevronRight } from "lucide-react"
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { SiteHeader } from "@/components/navigation/site-header";
+import { MainNav } from "@/components/navigation/main-nav";
+import { SiteFooter } from "@/components/navigation/site-footer";
+import { useAuth } from "@/components/auth/auth-provider";
+import {
+  Calendar,
+  ArrowLeft,
+  Share2,
+  Printer,
+  User,
+  ChevronRight,
+} from "lucide-react";
 
 // Animation variants
 const containerVariants = {
@@ -25,7 +32,7 @@ const containerVariants = {
       staggerChildren: 0.1,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -38,7 +45,7 @@ const itemVariants = {
       stiffness: 100,
     },
   },
-}
+};
 
 // Données pour les actualités (importées depuis le composant principal)
 // Note: Dans une application réelle, ces données seraient récupérées depuis une API
@@ -234,7 +241,8 @@ const newsItems = [
   },
   {
     id: "news-008",
-    title: "L'équipe de football de l'Université remporte le championnat interuniversitaire",
+    title:
+      "L'équipe de football de l'Université remporte le championnat interuniversitaire",
     excerpt:
       "L'équipe de football de l'Université de Douala a remporté le championnat interuniversitaire national. Une victoire qui couronne une saison exceptionnelle pour nos sportifs.",
     content: `
@@ -254,45 +262,51 @@ const newsItems = [
     author: "Service des Sports",
     featured: false,
   },
-]
+];
 
 // Fonction pour formater la date
 const formatDate = (dateString) => {
-  const options = { day: "numeric", month: "long", year: "numeric" }
-  return new Date(dateString).toLocaleDateString("fr-FR", options)
-}
+  const options = { day: "numeric", month: "long", year: "numeric" };
+  return new Date(dateString).toLocaleDateString("fr-FR", options);
+};
 
 export default function NewsDetailPage({ params }) {
-  const [news, setNews] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [relatedNews, setRelatedNews] = useState([])
-  const { status } = useAuth()
-  const router = useRouter()
+  const [news, setNews] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [relatedNews, setRelatedNews] = useState([]);
+  const { status } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     // Simuler un chargement de données
     const timer = setTimeout(() => {
-      const foundNews = newsItems.find((item) => item.id === params.id)
-      setNews(foundNews || null)
+      const foundNews = newsItems.find((item) => item.id === params.id);
+      setNews(foundNews || null);
 
       // Trouver des actualités liées (même catégorie)
       if (foundNews) {
         const related = newsItems
-          .filter((item) => item.category === foundNews.category && item.id !== foundNews.id)
-          .slice(0, 3)
-        setRelatedNews(related)
+          .filter(
+            (item) =>
+              item.category === foundNews.category && item.id !== foundNews.id
+          )
+          .slice(0, 3);
+        setRelatedNews(related);
       }
 
-      setLoading(false)
-    }, 500)
+      setLoading(false);
+    }, 500);
 
-    return () => clearTimeout(timer)
-  }, [params.id])
+    return () => clearTimeout(timer);
+  }, [params.id]);
 
   if (loading) {
     return (
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-        <SiteHeader showLoginButton={status !== "authenticated"} onLoginClick={() => router.push("/")} />
+        <SiteHeader
+          showLoginButton={status !== "authenticated"}
+          onLoginClick={() => router.push("/")}
+        />
         <MainNav />
         <main className="flex-1 container mx-auto px-4 py-8">
           <div className="animate-pulse space-y-6">
@@ -308,13 +322,16 @@ export default function NewsDetailPage({ params }) {
         </main>
         <SiteFooter />
       </div>
-    )
+    );
   }
 
   if (!news) {
     return (
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-        <SiteHeader showLoginButton={status !== "authenticated"} onLoginClick={() => router.push("/")} />
+        <SiteHeader
+          showLoginButton={status !== "authenticated"}
+          onLoginClick={() => router.push("/")}
+        />
         <MainNav />
         <main className="flex-1 container mx-auto px-4 py-8">
           <div className="text-center py-12">
@@ -322,17 +339,22 @@ export default function NewsDetailPage({ params }) {
             <p className="text-muted-foreground mb-6">
               L'actualité que vous recherchez n'existe pas ou a été supprimée.
             </p>
-            <Button onClick={() => router.push("/actualites")}>Retour aux actualités</Button>
+            <Button onClick={() => router.push("/actualites")}>
+              Retour aux actualités
+            </Button>
           </div>
         </main>
         <SiteFooter />
       </div>
-    )
+    );
   }
 
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <SiteHeader showLoginButton={status !== "authenticated"} onLoginClick={() => router.push("/")} />
+      <SiteHeader
+        showLoginButton={status !== "authenticated"}
+        onLoginClick={() => router.push("/")}
+      />
       <MainNav />
 
       <motion.main
@@ -342,17 +364,26 @@ export default function NewsDetailPage({ params }) {
         animate="visible"
       >
         <motion.div variants={itemVariants} className="mb-6">
-          <Button variant="ghost" onClick={() => router.push("/actualites")} className="gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => router.push("/actualites")}
+            className="gap-2"
+          >
             <ArrowLeft className="h-4 w-4" />
             Retour aux actualités
           </Button>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <motion.div
+          variants={itemVariants}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
           <div className="md:col-span-2 space-y-6">
             <div>
               <Badge className="mb-2">{news.category}</Badge>
-              <h1 className="text-3xl font-bold tracking-tight mb-4">{news.title}</h1>
+              <h1 className="text-3xl font-bold tracking-tight mb-4">
+                {news.title}
+              </h1>
               <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
@@ -367,13 +398,23 @@ export default function NewsDetailPage({ params }) {
             </div>
 
             <div className="relative h-80 w-full rounded-lg overflow-hidden">
-              <Image src={news.image || "/placeholder.svg"} alt={news.title} fill className="object-cover" />
+              <Image
+                src={news.image || "/placeholder.svg"}
+                alt={news.title}
+                fill
+                className="object-cover"
+              />
             </div>
 
-            <div className="prose prose-blue max-w-none" dangerouslySetInnerHTML={{ __html: news.content }} />
+            <div
+              className="prose prose-blue max-w-none"
+              dangerouslySetInnerHTML={{ __html: news.content }}
+            />
 
             <div className="flex justify-between items-center pt-4 border-t">
-              <div className="text-sm text-muted-foreground">Publié le {formatDate(news.date)}</div>
+              <div className="text-sm text-muted-foreground">
+                Publié le {formatDate(news.date)}
+              </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" className="gap-1">
                   <Share2 className="h-4 w-4" />
@@ -408,20 +449,30 @@ export default function NewsDetailPage({ params }) {
                             <h4 className="font-medium text-sm group-hover:text-primary transition-colors line-clamp-2">
                               {item.title}
                             </h4>
-                            <p className="text-xs text-muted-foreground mt-1">{formatDate(item.date)}</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {formatDate(item.date)}
+                            </p>
                           </div>
                         </div>
                       </Link>
                     ))}
-                    <Button variant="link" className="w-full justify-between p-0 h-auto" asChild>
+                    <Button
+                      variant="link"
+                      className="w-full justify-between p-0 h-auto"
+                      asChild
+                    >
                       <Link href={`/actualites?category=${news.category}`}>
-                        <span>Voir plus d'actualités {news.category.toLowerCase()}</span>
+                        <span>
+                          Voir plus d'actualités {news.category.toLowerCase()}
+                        </span>
                         <ChevronRight className="h-4 w-4" />
                       </Link>
                     </Button>
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">Aucune actualité similaire trouvée.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Aucune actualité similaire trouvée.
+                  </p>
                 )}
               </CardContent>
             </Card>
@@ -430,22 +481,46 @@ export default function NewsDetailPage({ params }) {
               <CardContent className="p-4">
                 <h3 className="font-semibold mb-4">Catégories</h3>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline" className="hover:bg-primary/10 cursor-pointer">
-                    <Link href="/actualites?category=Académique">Académique</Link>
+                  <Badge
+                    variant="outline"
+                    className="hover:bg-primary/10 cursor-pointer"
+                  >
+                    <Link href="/actualites?category=Académique">
+                      Académique
+                    </Link>
                   </Badge>
-                  <Badge variant="outline" className="hover:bg-primary/10 cursor-pointer">
-                    <Link href="/actualites?category=Administratif">Administratif</Link>
+                  <Badge
+                    variant="outline"
+                    className="hover:bg-primary/10 cursor-pointer"
+                  >
+                    <Link href="/actualites?category=Administratif">
+                      Administratif
+                    </Link>
                   </Badge>
-                  <Badge variant="outline" className="hover:bg-primary/10 cursor-pointer">
+                  <Badge
+                    variant="outline"
+                    className="hover:bg-primary/10 cursor-pointer"
+                  >
                     <Link href="/actualites?category=Événement">Événement</Link>
                   </Badge>
-                  <Badge variant="outline" className="hover:bg-primary/10 cursor-pointer">
-                    <Link href="/actualites?category=International">International</Link>
+                  <Badge
+                    variant="outline"
+                    className="hover:bg-primary/10 cursor-pointer"
+                  >
+                    <Link href="/actualites?category=International">
+                      International
+                    </Link>
                   </Badge>
-                  <Badge variant="outline" className="hover:bg-primary/10 cursor-pointer">
+                  <Badge
+                    variant="outline"
+                    className="hover:bg-primary/10 cursor-pointer"
+                  >
                     <Link href="/actualites?category=Recherche">Recherche</Link>
                   </Badge>
-                  <Badge variant="outline" className="hover:bg-primary/10 cursor-pointer">
+                  <Badge
+                    variant="outline"
+                    className="hover:bg-primary/10 cursor-pointer"
+                  >
                     <Link href="/actualites?category=Sport">Sport</Link>
                   </Badge>
                 </div>
@@ -457,6 +532,5 @@ export default function NewsDetailPage({ params }) {
 
       <SiteFooter />
     </div>
-  )
+  );
 }
-
