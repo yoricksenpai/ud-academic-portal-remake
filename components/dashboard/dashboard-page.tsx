@@ -1,22 +1,32 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { Calendar } from "@/components/ui/calendar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
-import { DashboardShell } from "@/components/dashboard/dashboard-shell"
-import { NotificationsPanel } from "@/components/dashboard/notifications-panel"
-import { RecentActivity } from "@/components/dashboard/recent-activity"
-import { Bell, FileText, Home, Mail, CreditCard, CalendarIcon, BookOpen, Clock, Users } from "lucide-react"
-import { useToast } from "@/components/ui/use-toast"
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Calendar } from "@/components/ui/calendar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DashboardShell } from "@/components/dashboard/dashboard-shell";
+import { NotificationsPanel } from "@/components/dashboard/notifications-panel";
+import { RecentActivity } from "@/components/dashboard/recent-activity";
+import {
+  Bell,
+  FileText,
+  Home,
+  Mail,
+  CreditCard,
+  CalendarIcon,
+  BookOpen,
+  Clock,
+  Users,
+} from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 // Animation variants
 const containerVariants = {
@@ -28,7 +38,7 @@ const containerVariants = {
       staggerChildren: 0.1,
     },
   },
-}
+};
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
@@ -36,25 +46,26 @@ const itemVariants = {
     y: 0,
     opacity: 1,
   },
-}
+};
 
 export function DashboardPage() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  const [isLoading, setIsLoading] = useState(true)
-  const [notifications, setNotifications] = useState<any[]>([])
-  const { toast } = useToast()
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isLoading, setIsLoading] = useState(true);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const { toast } = useToast();
 
   // Simuler le chargement des données
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoading(false)
+      setIsLoading(false);
 
       // Données de notification simulées
       setNotifications([
         {
           id: "1",
           title: "Inscription validée",
-          message: "Votre inscription pour l'année académique 2024-2025 a été validée.",
+          message:
+            "Votre inscription pour l'année académique 2024-2025 a été validée.",
           type: "success",
           read: false,
           createdAt: "2025-03-10T10:30:00Z",
@@ -62,7 +73,8 @@ export function DashboardPage() {
         {
           id: "2",
           title: "Nouveau cours ajouté",
-          message: "Un nouveau cours a été ajouté à votre emploi du temps: INF3104 - Sécurité informatique.",
+          message:
+            "Un nouveau cours a été ajouté à votre emploi du temps: INF3104 - Sécurité informatique.",
           type: "info",
           read: false,
           createdAt: "2025-03-12T14:15:00Z",
@@ -70,24 +82,25 @@ export function DashboardPage() {
         {
           id: "3",
           title: "Rappel de paiement",
-          message: "N'oubliez pas de régler vos frais de scolarité avant le 31 mars 2025.",
+          message:
+            "N'oubliez pas de régler vos frais de scolarité avant le 31 mars 2025.",
           type: "warning",
           read: false,
           createdAt: "2025-03-13T09:00:00Z",
         },
-      ])
-    }, 1500)
+      ]);
+    }, 1500);
 
-    return () => clearTimeout(timer)
-  }, [])
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleMarkAllAsRead = () => {
-    setNotifications(notifications.map((notif) => ({ ...notif, read: true })))
+    setNotifications(notifications.map((notif) => ({ ...notif, read: true })));
     toast({
       title: "Notifications",
       description: "Toutes les notifications ont été marquées comme lues",
-    })
-  }
+    });
+  };
 
   return (
     <DashboardShell>
@@ -106,12 +119,16 @@ export function DashboardPage() {
                   Étudiant
                 </Badge>
               </CardTitle>
-              <p className="text-xs text-muted-foreground">École Nationale Supérieure Polytechnique de Douala</p>
+              <p className="text-xs text-muted-foreground">
+                École Nationale Supérieure Polytechnique de Douala
+              </p>
             </CardHeader>
             <CardContent className="p-4">
               <div className="flex flex-col items-center justify-center p-4">
                 <div className="border border-gray-300 p-1 mb-4 rounded-md overflow-hidden">
-                  <p className="text-sm font-medium mb-2 text-center">24G02037</p>
+                  <p className="text-sm font-medium mb-2 text-center">
+                    24G02037
+                  </p>
                   <div className="w-32 h-40 bg-gray-200 flex items-center justify-center overflow-hidden">
                     <Image
                       src="/placeholder.svg?height=160&width=128"
@@ -123,11 +140,17 @@ export function DashboardPage() {
                   </div>
                 </div>
 
-                <h3 className="font-medium text-center mb-1">PRISO JOHAN YORICK</h3>
-                <p className="text-sm text-muted-foreground mb-4">priso.johan@univ-douala.cm</p>
+                <h3 className="font-medium text-center mb-1">
+                  PRISO JOHAN YORICK
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  priso.johan@univ-douala.cm
+                </p>
 
                 <div className="w-full">
-                  <h4 className="text-sm font-medium mb-2">Informations académiques</h4>
+                  <h4 className="text-sm font-medium mb-2">
+                    Informations académiques
+                  </h4>
                   <ul className="space-y-2 text-sm">
                     <li className="flex justify-between">
                       <span className="text-muted-foreground">Filière:</span>
@@ -143,7 +166,10 @@ export function DashboardPage() {
                     </li>
                     <li className="flex justify-between">
                       <span className="text-muted-foreground">Statut:</span>
-                      <Badge variant="outline" className="bg-green-100 text-green-800">
+                      <Badge
+                        variant="outline"
+                        className="bg-green-100 text-green-800"
+                      >
                         Actif
                       </Badge>
                     </li>
@@ -212,9 +238,12 @@ export function DashboardPage() {
 
                 <TabsContent value="accueil" className="p-6">
                   <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
-                    <h2 className="text-lg font-bold text-primary mb-1">Bienvenue dans votre espace personnel</h2>
+                    <h2 className="text-lg font-bold text-primary mb-1">
+                      Bienvenue dans votre espace personnel
+                    </h2>
                     <p className="text-sm text-muted-foreground">
-                      Consultez vos informations académiques, suivez vos notes et gérez vos inscriptions.
+                      Consultez vos informations académiques, suivez vos notes
+                      et gérez vos inscriptions.
                     </p>
                   </div>
 
@@ -234,7 +263,10 @@ export function DashboardPage() {
                             <Skeleton className="h-12 w-full" />
                           </div>
                         ) : (
-                          <NotificationsPanel notifications={notifications} onMarkAllAsRead={handleMarkAllAsRead} />
+                          <NotificationsPanel
+                            notifications={notifications}
+                            onMarkAllAsRead={handleMarkAllAsRead}
+                          />
                         )}
                       </CardContent>
                     </Card>
@@ -302,7 +334,9 @@ export function DashboardPage() {
                 </TabsContent>
 
                 <TabsContent value="boite" className="p-6">
-                  <h2 className="text-lg font-semibold mb-4">Boîte de réception</h2>
+                  <h2 className="text-lg font-semibold mb-4">
+                    Boîte de réception
+                  </h2>
                   {isLoading ? (
                     <div className="space-y-4">
                       <Skeleton className="h-20 w-full" />
@@ -314,12 +348,16 @@ export function DashboardPage() {
                       <div className="border rounded-md p-4 hover:bg-muted/50 transition-colors cursor-pointer">
                         <div className="flex justify-between items-start mb-2">
                           <h3 className="font-medium">Inscription validée</h3>
-                          <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                          <Badge
+                            variant="outline"
+                            className="bg-blue-100 text-blue-800"
+                          >
                             Nouveau
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">
-                          Votre inscription pour l'année académique 2024-2025 a été validée.
+                          Votre inscription pour l'année académique 2024-2025 a
+                          été validée.
                         </p>
                         <div className="flex justify-between items-center text-xs text-muted-foreground">
                           <span>De: Administration</span>
@@ -329,13 +367,19 @@ export function DashboardPage() {
 
                       <div className="border rounded-md p-4 hover:bg-muted/50 transition-colors cursor-pointer">
                         <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-medium">Rappel: Réunion d'information</h3>
-                          <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                          <h3 className="font-medium">
+                            Rappel: Réunion d'information
+                          </h3>
+                          <Badge
+                            variant="outline"
+                            className="bg-blue-100 text-blue-800"
+                          >
                             Nouveau
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">
-                          Une réunion d'information aura lieu le 15 mars à 14h00 dans l'amphithéâtre principal.
+                          Une réunion d'information aura lieu le 15 mars à 14h00
+                          dans l'amphithéâtre principal.
                         </p>
                         <div className="flex justify-between items-center text-xs text-muted-foreground">
                           <span>De: Secrétariat</span>
@@ -345,13 +389,19 @@ export function DashboardPage() {
 
                       <div className="border rounded-md p-4 hover:bg-muted/50 transition-colors cursor-pointer">
                         <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-medium">Mise à jour du programme</h3>
-                          <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                          <h3 className="font-medium">
+                            Mise à jour du programme
+                          </h3>
+                          <Badge
+                            variant="outline"
+                            className="bg-blue-100 text-blue-800"
+                          >
                             Nouveau
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-2">
-                          Le programme de cours a été mis à jour. Veuillez consulter votre emploi du temps.
+                          Le programme de cours a été mis à jour. Veuillez
+                          consulter votre emploi du temps.
                         </p>
                         <div className="flex justify-between items-center text-xs text-muted-foreground">
                           <span>De: Département Informatique</span>
@@ -363,7 +413,9 @@ export function DashboardPage() {
                 </TabsContent>
 
                 <TabsContent value="inscription" className="p-6">
-                  <h2 className="text-lg font-semibold mb-4">Mon inscription</h2>
+                  <h2 className="text-lg font-semibold mb-4">
+                    Mon inscription
+                  </h2>
                   {isLoading ? (
                     <Skeleton className="h-64 w-full" />
                   ) : (
@@ -371,53 +423,86 @@ export function DashboardPage() {
                       <CardContent className="p-6">
                         <div className="flex justify-between items-center mb-6">
                           <div>
-                            <h3 className="font-semibold text-lg">Année académique 2024-2025</h3>
-                            <p className="text-sm text-muted-foreground">Inscription validée le 15/09/2024</p>
+                            <h3 className="font-semibold text-lg">
+                              Année académique 2024-2025
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              Inscription validée le 15/09/2024
+                            </p>
                           </div>
-                          <Badge className="bg-green-100 text-green-800">Validée</Badge>
+                          <Badge className="bg-green-100 text-green-800">
+                            Validée
+                          </Badge>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>
-                            <h4 className="font-medium mb-2">Informations académiques</h4>
+                            <h4 className="font-medium mb-2">
+                              Informations académiques
+                            </h4>
                             <ul className="space-y-2">
                               <li className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Faculté:</span>
-                                <span>École Nationale Supérieure Polytechnique</span>
+                                <span className="text-muted-foreground">
+                                  Faculté:
+                                </span>
+                                <span>
+                                  École Nationale Supérieure Polytechnique
+                                </span>
                               </li>
                               <li className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Programme:</span>
+                                <span className="text-muted-foreground">
+                                  Programme:
+                                </span>
                                 <span>Génie Informatique</span>
                               </li>
                               <li className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Niveau:</span>
+                                <span className="text-muted-foreground">
+                                  Niveau:
+                                </span>
                                 <span>Niveau 3</span>
                               </li>
                               <li className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Régime:</span>
+                                <span className="text-muted-foreground">
+                                  Régime:
+                                </span>
                                 <span>Temps plein</span>
                               </li>
                             </ul>
                           </div>
 
                           <div>
-                            <h4 className="font-medium mb-2">Informations financières</h4>
+                            <h4 className="font-medium mb-2">
+                              Informations financières
+                            </h4>
                             <ul className="space-y-2">
                               <li className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Frais de scolarité:</span>
+                                <span className="text-muted-foreground">
+                                  Frais de scolarité:
+                                </span>
                                 <span>600 000 FCFA</span>
                               </li>
                               <li className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Montant payé:</span>
+                                <span className="text-muted-foreground">
+                                  Montant payé:
+                                </span>
                                 <span>600 000 FCFA</span>
                               </li>
                               <li className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Solde:</span>
-                                <span className="text-green-600 font-medium">0 FCFA</span>
+                                <span className="text-muted-foreground">
+                                  Solde:
+                                </span>
+                                <span className="text-green-600 font-medium">
+                                  0 FCFA
+                                </span>
                               </li>
                               <li className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Statut de paiement:</span>
-                                <Badge variant="outline" className="bg-green-100 text-green-800">
+                                <span className="text-muted-foreground">
+                                  Statut de paiement:
+                                </span>
+                                <Badge
+                                  variant="outline"
+                                  className="bg-green-100 text-green-800"
+                                >
                                   Complet
                                 </Badge>
                               </li>
@@ -447,7 +532,7 @@ export function DashboardPage() {
         </motion.div>
       </motion.div>
     </DashboardShell>
-  )
+  );
 }
 
 function DashboardCard({
@@ -456,25 +541,26 @@ function DashboardCard({
   href,
   icon,
 }: {
-  title: string
-  description: string
-  href: string
-  icon: React.ReactNode
+  title: string;
+  description: string;
+  href: string;
+  icon: React.ReactNode;
 }) {
   return (
     <Link href={href}>
       <Card className="h-full hover:shadow-md transition-all border-primary/20 overflow-hidden group hover:border-primary/50">
-      <CardContent className="p-4 flex items-start space-x-4">
-        <div className="p-2 rounded-md bg-primary/10 flex-shrink-0">
-          {icon}
-        </div>
-        <div>
-          <h3 className="font-medium group-hover:text-primary transition-colors">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
-      </CardContent>
-    </Card>
-  </Link>
+        <CardContent className="p-4 flex items-start space-x-4">
+          <div className="p-2 rounded-md bg-primary/10 flex-shrink-0">
+            {icon}
+          </div>
+          <div>
+            <h3 className="font-medium group-hover:text-primary transition-colors">
+              {title}
+            </h3>
+            <p className="text-sm text-muted-foreground">{description}</p>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
 }
-\
-
