@@ -63,27 +63,8 @@ export async function POST(request: Request) {
 
   try {
     const data = await request.json()
-
-    // Générer un ID unique pour la nouvelle inscription
-    const newId = `INS-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)
-      .toString()
-      .padStart(3, "0")}`
-
-    const newInscription: Inscription = {
-      id: newId,
-      userId: "1", // Dans une application réelle, ce serait l'ID de l'utilisateur connecté
-      academicYear: data.academicYear,
-      faculty: data.faculty,
-      program: data.program,
-      level: data.level,
-      registrationDate: new Date().toISOString().split("T")[0],
-      status: "pending",
-    }
-
-    // Ajouter la nouvelle inscription à la "base de données"
-    inscriptionsDB.push(newInscription)
-
-    return NextResponse.json(newInscription)
+    const inscription = await studentService.createStudent(data)
+    return NextResponse.json(inscription)
   } catch (error) {
     console.error("Erreur lors du traitement de la requête:", error)
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })

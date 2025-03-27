@@ -8,17 +8,26 @@ datasource db {
 }
 
 model Student {
-  id           Int           @id @default(autoincrement())
-  studentId    String        @unique
-  firstName    String
-  lastName     String
-  email        String        @unique
-  dateOfBirth  DateTime?
-  enrolledYear Int
-  major        String?
-  enrollments  Enrollment[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id              Int      @id @default(autoincrement())
+  studentId       String   @unique
+  firstName       String
+  lastName        String
+  email           String   @unique
+  dateOfBirth     DateTime?
+  enrolledYear    Int
+  major           String?
+  enrollments     Enrollment[]
+  
+  // New fields
+  userId          String?
+  academicYear    String
+  faculty         String
+  program         String
+  level           String
+  registrationDate DateTime @default(now())
+  status          Status    @default(PENDING)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model Instructor {
@@ -45,6 +54,24 @@ model Course {
   enrollments  Enrollment[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+  classSessions ClassSession[]
+}
+
+model ClassSession {
+  id          Int      @id @default(autoincrement())
+  courseId    Int
+  day         String   // e.g., "Monday", "Tuesday"
+  startTime   String   // e.g., "08:00"
+  endTime     String   // e.g., "10:00"
+  location    String
+  type        String   // "CM", "TD", or "TP"
+  repeatWeekly Boolean @default(true)
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  course      Course   @relation(fields: [courseId], references: [id])
 }
 
 model Enrollment {
@@ -62,6 +89,9 @@ model Enrollment {
 }
 
 enum Status {
+  PENDING
+  VALIDATED
+  REJECTED
   ENROLLED
   COMPLETED
   DROPPED

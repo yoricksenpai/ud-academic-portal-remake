@@ -19,7 +19,7 @@ export class StudentService {
   }
 
   /**
-   * Create a new student
+   * Create a new student with inscription details
    */
   async createStudent(studentData: {
     studentId: string;
@@ -29,9 +29,17 @@ export class StudentService {
     enrolledYear: number;
     dateOfBirth?: Date;
     major?: string;
+    academicYear: string;
+    faculty: string;
+    program: string;
+    level: string;
+    userId?: string;
   }) {
     return prisma.student.create({
-      data: studentData
+      data: {
+        ...studentData,
+        status: 'PENDING',
+      }
     });
   }
 
