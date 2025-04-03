@@ -4,103 +4,71 @@ import { randomUUID } from 'crypto';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Nettoyage de la base de données - optionnel, enlever si vous voulez ajouter aux données existantes
-  console.log('🗑️ Nettoyage de la base de données...');
+  // Clear existing data
+  console.log('🗑️ Cleaning database...');
   await prisma.enrollment.deleteMany({});
   await prisma.course.deleteMany({});
   await prisma.instructor.deleteMany({});
   await prisma.student.deleteMany({});
   
-  console.log('🧑‍🏫 Création des enseignants...');
+  console.log('🧑‍🏫 Creating instructors...');
   const instructors = await Promise.all([
     prisma.instructor.create({
       data: {
-        staffId: `PROF-${randomUUID().substring(0, 6)}`,
         firstName: 'Marie',
         lastName: 'Curie',
-        email: 'marie.curie@universite.fr',
-        department: 'Sciences Physiques',
+        email: 'marie.curie@univ-douala.cm',
+        department: 'Physics',
       },
     }),
     prisma.instructor.create({
       data: {
-        staffId: `PROF-${randomUUID().substring(0, 6)}`,
         firstName: 'Albert',
         lastName: 'Einstein',
-        email: 'albert.einstein@universite.fr',
-        department: 'Mathématiques',
+        email: 'albert.einstein@univ-douala.cm',
+        department: 'Mathematics',
       },
     }),
     prisma.instructor.create({
       data: {
-        staffId: `PROF-${randomUUID().substring(0, 6)}`,
         firstName: 'Ada',
         lastName: 'Lovelace',
-        email: 'ada.lovelace@universite.fr',
-        department: 'Informatique',
-      },
-    }),
-    prisma.instructor.create({
-      data: {
-        staffId: `PROF-${randomUUID().substring(0, 6)}`,
-        firstName: 'René',
-        lastName: 'Descartes',
-        email: 'rene.descartes@universite.fr',
-        department: 'Philosophie',
+        email: 'ada.lovelace@univ-douala.cm',
+        department: 'Computer Science',
       },
     }),
   ]);
 
-  console.log('📚 Création des cours...');
+  console.log('📚 Creating courses...');
   const courses = await Promise.all([
     prisma.course.create({
       data: {
-        courseCode: 'PHY101',
-        title: 'Introduction à la Physique',
-        description: 'Principes fondamentaux de la physique classique',
+        courseCode: 'CS101',
+        title: 'Introduction to Programming',
+        description: 'Basic concepts of programming using Python',
         credits: 3,
-        semester: 'Automne 2023',
-        instructorId: instructors[0].id,
+        semester: 'Fall 2023',
+        instructorId: instructors[2].id, // Ada Lovelace
       },
     }),
     prisma.course.create({
       data: {
         courseCode: 'MATH201',
-        title: 'Calcul Avancé',
-        description: 'Théorie et applications du calcul différentiel et intégral',
+        title: 'Advanced Calculus',
+        description: 'Differential and integral calculus',
         credits: 4,
-        semester: 'Printemps 2024',
-        instructorId: instructors[1].id,
+        semester: 'Spring 2024',
+        instructorId: instructors[1].id, // Einstein
       },
     }),
     prisma.course.create({
       data: {
-        courseCode: 'CS303',
-        title: 'Algorithmes et Structures de Données',
-        description: 'Conception et analyse d\'algorithmes efficaces',
-        credits: 4,
-        semester: 'Automne 2023',
-        instructorId: instructors[2].id,
-      },
-    }),
-    prisma.course.create({
-      data: {
-        courseCode: 'PHIL202',
-        title: 'Logique et Raisonnement',
-        description: 'Introduction aux principes de la logique formelle',
+        courseCode: 'PHY101',
+        title: 'General Physics',
+        description: 'Introduction to physics principles',
         credits: 3,
-        semester: 'Printemps 2024',
-        instructorId: instructors[3].id,
-      },
-    }),
-    prisma.course.create({
-      data: {
-        courseCode: 'CS101',
-        title: 'Introduction à la Programmation',
-        description: 'Bases de la programmation avec Python',
-        credits: 3,
-        semester: 'Automne 2023',
-        instructorId: instructors[2].id,
+        semester: 'Fall 2023',
+        instructorId: instructors[0].id, // Marie Curie
       },
     }),
   ]);
@@ -182,16 +150,16 @@ async function main() {
     prisma.enrollment.create({
       data: {
         studentId: students[0].id,
-        courseId: courses[2].id, // CS303: Algorithmes
+        courseId: courses[0].id, // CS101: Intro à la Programmation
         status: Status.ENROLLED,
+        grade: 'A',
       },
     }),
     prisma.enrollment.create({
       data: {
         studentId: students[0].id,
-        courseId: courses[4].id, // CS101: Intro à la Programmation
+        courseId: courses[1].id, // MATH201: Calcul Avancé
         status: Status.ENROLLED,
-        grade: 'A',
       },
     }),
     
@@ -199,7 +167,7 @@ async function main() {
     prisma.enrollment.create({
       data: {
         studentId: students[1].id,
-        courseId: courses[0].id, // PHY101: Intro à la Physique
+        courseId: courses[2].id, // PHY101: Intro à la Physique
         status: Status.ENROLLED,
       },
     }),
@@ -223,7 +191,7 @@ async function main() {
     prisma.enrollment.create({
       data: {
         studentId: students[2].id,
-        courseId: courses[3].id, // PHIL202: Logique et Raisonnement
+        courseId: courses[2].id, // PHY101: Intro à la Physique
         status: Status.DROPPED,
       },
     }),
@@ -232,7 +200,7 @@ async function main() {
     prisma.enrollment.create({
       data: {
         studentId: students[3].id,
-        courseId: courses[3].id, // PHIL202: Logique et Raisonnement
+        courseId: courses[2].id, // PHY101: Intro à la Physique
         status: Status.ENROLLED,
       },
     }),
@@ -241,7 +209,7 @@ async function main() {
     prisma.enrollment.create({
       data: {
         studentId: students[4].id,
-        courseId: courses[2].id, // CS303: Algorithmes
+        courseId: courses[0].id, // CS101: Intro à la Programmation
         status: Status.COMPLETED,
         grade: 'A-',
       },
@@ -249,7 +217,7 @@ async function main() {
     prisma.enrollment.create({
       data: {
         studentId: students[4].id,
-        courseId: courses[4].id, // CS101: Intro à la Programmation
+        courseId: courses[1].id, // MATH201: Calcul Avancé
         status: Status.COMPLETED,
         grade: 'A+',
       },
@@ -259,7 +227,7 @@ async function main() {
     prisma.enrollment.create({
       data: {
         studentId: students[5].id,
-        courseId: courses[0].id, // PHY101: Intro à la Physique
+        courseId: courses[2].id, // PHY101: Intro à la Physique
         status: Status.ENROLLED,
       },
     }),
@@ -272,7 +240,7 @@ async function main() {
     }),
   ]);
 
-  console.log('✅ Données de test générées avec succès !');
+  console.log('✅ Test data generated successfully!');
 }
 
 main()

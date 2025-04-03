@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "ACCUEIL", href: "/" },
@@ -12,10 +12,10 @@ const navItems = [
   { label: "NOTES", href: "/notes" },
   { label: "ENRÔLEMENT", href: "/enrolement" },
   { label: "MON COMPTE", href: "/compte" },
-]
+];
 
 export function MainNav() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <nav className="bg-primary">
@@ -27,7 +27,9 @@ export function MainNav() {
                 href={item.href}
                 className={cn(
                   "block px-4 py-3 text-sm font-medium transition-colors hover:bg-primary-foreground/10",
-                  pathname === item.href ? "bg-primary-foreground/20 text-white" : "text-primary-foreground",
+                  pathname === item.href
+                    ? "bg-primary-foreground/20 text-white"
+                    : "text-primary-foreground"
                 )}
               >
                 {item.label}
@@ -37,6 +39,5 @@ export function MainNav() {
         </ul>
       </div>
     </nav>
-  )
+  );
 }
-

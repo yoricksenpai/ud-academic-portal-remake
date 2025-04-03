@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Menu, ChevronDown } from "lucide-react"
-import { useMediaQuery } from "@/hooks/use-media-query"
-import { useAuth } from "@/components/auth/auth-provider"
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Menu, ChevronDown } from "lucide-react";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { useAuth } from "@/components/auth/auth-provider";
 
 // Modification des items de navigation pour les séparer en deux catégories
 // Création des items pour les utilisateurs authentifiés et non authentifiés
@@ -20,7 +20,7 @@ const publicNavItems = [
   { label: "ASSOCIATIONS", href: "/associations" },
   { label: "BOURSES", href: "/bourses" },
   { label: "CONTACT", href: "/contact" },
-]
+];
 
 const privateNavItems = [
   { label: "ACCUEIL", href: "/" },
@@ -30,16 +30,17 @@ const privateNavItems = [
   { label: "NOTES", href: "/notes" },
   { label: "ENRÔLEMENT", href: "/enrolement" },
   { label: "MON COMPTE", href: "/compte" },
-]
+];
 
 export function MainNav() {
-  const pathname = usePathname()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const isDesktop = useMediaQuery("(min-width: 768px)")
-  const { status } = useAuth()
+  const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { status } = useAuth();
 
   // Sélectionner les items de navigation en fonction de l'état d'authentification
-  const navItems = status === "authenticated" ? privateNavItems : publicNavItems
+  const navItems =
+    status === "authenticated" ? privateNavItems : publicNavItems;
 
   // Animation variants
   const containerVariants = {
@@ -59,7 +60,7 @@ export function MainNav() {
         when: "afterChildren",
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: -10 },
@@ -79,7 +80,7 @@ export function MainNav() {
         duration: 0.2,
       },
     },
-  }
+  };
 
   return (
     <nav className="bg-primary shadow-md">
@@ -114,11 +115,16 @@ export function MainNav() {
               exit="exit"
               className={cn(
                 "flex flex-col md:flex-row md:flex-wrap",
-                !isDesktop && "absolute z-50 bg-primary w-full shadow-lg rounded-b-lg overflow-hidden",
+                !isDesktop &&
+                  "absolute z-50 bg-primary w-full shadow-lg rounded-b-lg overflow-hidden"
               )}
             >
               {navItems.map((item, index) => (
-                <motion.li key={item.href} variants={itemVariants} custom={index}>
+                <motion.li
+                  key={item.href}
+                  variants={itemVariants}
+                  custom={index}
+                >
                   <Link
                     href={item.href}
                     className={cn(
@@ -126,11 +132,20 @@ export function MainNav() {
                       pathname === item.href
                         ? "bg-primary-foreground/20 text-white"
                         : "text-primary-foreground hover:bg-primary-foreground/10",
-                      pathname === item.href && !isDesktop && "border-l-4 border-white",
+                      pathname === item.href &&
+                        !isDesktop &&
+                        "border-l-4 border-white"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <motion.span whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 400, damping: 10 }}>
+                    <motion.span
+                      whileHover={{ x: 5 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 10,
+                      }}
+                    >
                       {item.label}
                     </motion.span>
                   </Link>
@@ -141,6 +156,5 @@ export function MainNav() {
         </AnimatePresence>
       </div>
     </nav>
-  )
+  );
 }
-

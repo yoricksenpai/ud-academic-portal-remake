@@ -1,14 +1,17 @@
-"use client"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { LogIn } from "lucide-react"
+"use client";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { LogIn } from "lucide-react";
 
 interface SiteHeaderProps {
-  showLoginButton?: boolean
-  onLoginClick?: () => void
+  showLoginButton?: boolean;
+  onLoginClick?: () => void;
 }
 
-export function SiteHeader({ showLoginButton = true, onLoginClick }: SiteHeaderProps) {
+export function SiteHeader({
+  showLoginButton = true,
+  onLoginClick,
+}: SiteHeaderProps) {
   return (
     <motion.header
       className="bg-gradient-to-r from-primary to-blue-700 text-white py-4 sticky top-0 z-50 shadow-md backdrop-blur-sm bg-opacity-95"
@@ -21,7 +24,11 @@ export function SiteHeader({ showLoginButton = true, onLoginClick }: SiteHeaderP
       }}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }}>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <motion.h1
             className="text-2xl md:text-3xl font-bold font-heading"
             animate={{
@@ -39,7 +46,9 @@ export function SiteHeader({ showLoginButton = true, onLoginClick }: SiteHeaderP
           >
             SYSTHAG-ONLINE
           </motion.h1>
-          <p className="text-red-300 text-sm">Portail académique de l'Université de Douala</p>
+          <p className="text-red-300 text-sm">
+            Portail académique de l'Université de Douala
+          </p>
         </motion.div>
 
         {showLoginButton && (
@@ -50,7 +59,11 @@ export function SiteHeader({ showLoginButton = true, onLoginClick }: SiteHeaderP
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Button onClick={onLoginClick} className="btn-gradient hover-lift" size="sm">
+            <Button
+              onClick={onLoginClick}
+              className="btn-gradient hover-lift"
+              size="sm"
+            >
               <LogIn className="mr-1 h-4 w-4" />
               Connexion
             </Button>
@@ -58,6 +71,5 @@ export function SiteHeader({ showLoginButton = true, onLoginClick }: SiteHeaderP
         )}
       </div>
     </motion.header>
-  )
+  );
 }
-
