@@ -29,6 +29,7 @@ export class StudentService {
     enrolledYear: number;
     dateOfBirth?: Date;
     major?: string;
+    phoneNumber?: string; // Nouveau champ ajouté
     academicYear: string;
     faculty: string;
     program: string;
@@ -53,6 +54,7 @@ export class StudentService {
       lastName: string;
       email: string;
       major: string;
+      phoneNumber?: string; // Nouveau champ ajouté
     }>
   ) {
     return prisma.student.update({

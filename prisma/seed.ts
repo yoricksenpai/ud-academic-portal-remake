@@ -1,5 +1,7 @@
+
 import { PrismaClient, Status } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import { Buffer } from 'buffer';
 
 const prisma = new PrismaClient();
 
@@ -7,6 +9,7 @@ async function main() {
   // Clear existing data
   console.log('🗑️ Cleaning database...');
   await prisma.enrollment.deleteMany({});
+  await prisma.classSession.deleteMany({});
   await prisma.course.deleteMany({});
   await prisma.instructor.deleteMany({});
   await prisma.student.deleteMany({});
@@ -15,6 +18,7 @@ async function main() {
   const instructors = await Promise.all([
     prisma.instructor.create({
       data: {
+        staffId: `STAFF-${randomUUID().substring(0, 6)}`,
         firstName: 'Marie',
         lastName: 'Curie',
         email: 'marie.curie@univ-douala.cm',
@@ -23,6 +27,7 @@ async function main() {
     }),
     prisma.instructor.create({
       data: {
+        staffId: `STAFF-${randomUUID().substring(0, 6)}`,
         firstName: 'Albert',
         lastName: 'Einstein',
         email: 'albert.einstein@univ-douala.cm',
@@ -31,6 +36,7 @@ async function main() {
     }),
     prisma.instructor.create({
       data: {
+        staffId: `STAFF-${randomUUID().substring(0, 6)}`,
         firstName: 'Ada',
         lastName: 'Lovelace',
         email: 'ada.lovelace@univ-douala.cm',
@@ -73,6 +79,116 @@ async function main() {
     }),
   ]);
 
+  // Store course IDs for later use
+  const courseIds = courses.map(course => course.id);
+
+  // Create class sessions for each course
+  console.log('🗓️ Creating class sessions...');
+  await Promise.all([
+    // For CS101
+    prisma.classSession.create({
+      data: {
+        // Connect by ID instead of using courseId directly
+        course: {
+          connect: { 
+            id: courses[0].id 
+          }
+        },
+        day: 'Monday',
+        startTime: '08:00',
+        endTime: '10:00',
+        location: 'Room A101',
+        type: 'CM',
+        startDate: new Date('2023-09-04'),
+        endDate: new Date('2023-12-15'),
+      },
+    }),
+    prisma.classSession.create({
+      data: {
+        course: {
+          connect: { 
+            id: courses[0].id 
+          }
+        },
+        day: 'Wednesday',
+        startTime: '13:00',
+        endTime: '15:00',
+        location: 'Lab B205',
+        type: 'TP',
+        startDate: new Date('2023-09-06'),
+        endDate: new Date('2023-12-13'),
+      },
+    }),
+    
+    // For MATH201
+    prisma.classSession.create({
+      data: {
+        course: {
+          connect: { 
+            id: courses[1].id 
+          }
+        },
+        day: 'Tuesday',
+        startTime: '10:00',
+        endTime: '12:00',
+        location: 'Room C103',
+        type: 'CM',
+        startDate: new Date('2024-01-15'),
+        endDate: new Date('2024-05-10'),
+      },
+    }),
+    prisma.classSession.create({
+      data: {
+        course: {
+          connect: { 
+            id: courses[1].id 
+          }
+        },
+        day: 'Thursday',
+        startTime: '15:00',
+        endTime: '17:00',
+        location: 'Room C103',
+        type: 'TD',
+        startDate: new Date('2024-01-17'),
+        endDate: new Date('2024-05-09'),
+      },
+    }),
+    
+    // For PHY101
+    prisma.classSession.create({
+      data: {
+        course: {
+          connect: { 
+            id: courses[2].id 
+          }
+        },
+        day: 'Monday',
+        startTime: '14:00',
+        endTime: '16:00',
+        location: 'Room D201',
+        type: 'CM',
+        startDate: new Date('2023-09-04'),
+        endDate: new Date('2023-12-15'),
+      },
+    }),
+    prisma.classSession.create({
+      data: {
+        course: {
+          connect: { 
+            id: courses[2].id 
+          }
+        },
+        day: 'Friday',
+        startTime: '09:00',
+        endTime: '12:00',
+        location: 'Lab D109',
+        type: 'TP',
+        startDate: new Date('2023-09-08'),
+        endDate: new Date('2023-12-15'),
+      },
+    }),
+  ]);
+
   console.log('👨‍🎓 Création des étudiants...');
   const students = await Promise.all([
     prisma.student.create({
@@ -84,6 +200,14 @@ async function main() {
         dateOfBirth: new Date('1999-05-15'),
         enrolledYear: 2021,
         major: 'Informatique',
+        // Required fields from schema
+        academicYear: '2023-2024',
+        faculty: 'Sciences',
+        program: 'Computer Science',
+        level: 'Undergraduate',
+        // Optional fields
+        phoneNumber: '+33 6 12 34 56 78',
+
       },
     }),
     prisma.student.create({
@@ -95,6 +219,13 @@ async function main() {
         dateOfBirth: new Date('2000-03-22'),
         enrolledYear: 2022,
         major: 'Physique',
+        // Required fields from schema
+        academicYear: '2023-2024',
+        faculty: 'Sciences',
+        program: 'Physics',
+        level: 'Undergraduate',
+        // Optional fields
+        phoneNumber: '+33 6 23 45 67 89',
       },
     }),
     prisma.student.create({
@@ -106,6 +237,13 @@ async function main() {
         dateOfBirth: new Date('1998-11-07'),
         enrolledYear: 2020,
         major: 'Mathématiques',
+        // Required fields from schema
+        academicYear: '2023-2024',
+        faculty: 'Sciences',
+        program: 'Mathematics',
+        level: 'Undergraduate',
+        // Optional fields
+        phoneNumber: '+33 6 34 56 78 90',
       },
     }),
     prisma.student.create({
@@ -117,6 +255,13 @@ async function main() {
         dateOfBirth: new Date('2001-09-30'),
         enrolledYear: 2023,
         major: 'Philosophie',
+        // Required fields from schema
+        academicYear: '2023-2024',
+        faculty: 'Arts & Humanities',
+        program: 'Philosophy',
+        level: 'Undergraduate',
+        // Optional fields
+        phoneNumber: '+33 6 45 67 89 01',
       },
     }),
     prisma.student.create({
@@ -128,6 +273,14 @@ async function main() {
         dateOfBirth: new Date('1999-01-18'),
         enrolledYear: 2021,
         major: 'Informatique',
+        // Required fields from schema
+        academicYear: '2023-2024',
+        faculty: 'Sciences',
+        program: 'Computer Science',
+        level: 'Undergraduate',
+        // Optional fields
+        phoneNumber: '+33 6 56 78 90 12',
+
       },
     }),
     prisma.student.create({
@@ -139,26 +292,33 @@ async function main() {
         dateOfBirth: new Date('2000-07-12'),
         enrolledYear: 2022,
         major: 'Physique',
+        // Required fields from schema
+        academicYear: '2023-2024',
+        faculty: 'Sciences',
+        program: 'Physics',
+        level: 'Undergraduate',
+        // Optional fields
+        phoneNumber: '+33 6 67 89 01 23',
       },
     }),
   ]);
 
   console.log('📝 Création des inscriptions aux cours...');
-  // Inscriptions avec différents statuts
+  // Use connect syntax for enrollment relations too
   await Promise.all([
     // Thomas Martin
     prisma.enrollment.create({
       data: {
-        studentId: students[0].id,
-        courseId: courses[0].id, // CS101: Intro à la Programmation
+        student: { connect: { id: students[0].id } },
+        course: { connect: { id: courses[0].id } },
         status: Status.ENROLLED,
         grade: 'A',
       },
     }),
     prisma.enrollment.create({
       data: {
-        studentId: students[0].id,
-        courseId: courses[1].id, // MATH201: Calcul Avancé
+        student: { connect: { id: students[0].id } },
+        course: { connect: { id: courses[1].id } },
         status: Status.ENROLLED,
       },
     }),
@@ -166,15 +326,15 @@ async function main() {
     // Sophie Dubois
     prisma.enrollment.create({
       data: {
-        studentId: students[1].id,
-        courseId: courses[2].id, // PHY101: Intro à la Physique
+        student: { connect: { id: students[1].id } },
+        course: { connect: { id: courses[2].id } },
         status: Status.ENROLLED,
       },
     }),
     prisma.enrollment.create({
       data: {
-        studentId: students[1].id,
-        courseId: courses[1].id, // MATH201: Calcul Avancé
+        student: { connect: { id: students[1].id } },
+        course: { connect: { id: courses[1].id } },
         status: Status.WAITLISTED,
       },
     }),
@@ -182,16 +342,16 @@ async function main() {
     // Alexandre Petit
     prisma.enrollment.create({
       data: {
-        studentId: students[2].id,
-        courseId: courses[1].id, // MATH201: Calcul Avancé
+        student: { connect: { id: students[2].id } },
+        course: { connect: { id: courses[1].id } },
         status: Status.ENROLLED,
         grade: 'B+',
       },
     }),
     prisma.enrollment.create({
       data: {
-        studentId: students[2].id,
-        courseId: courses[2].id, // PHY101: Intro à la Physique
+        student: { connect: { id: students[2].id } },
+        course: { connect: { id: courses[2].id } },
         status: Status.DROPPED,
       },
     }),
@@ -199,8 +359,8 @@ async function main() {
     // Emma Leroy
     prisma.enrollment.create({
       data: {
-        studentId: students[3].id,
-        courseId: courses[2].id, // PHY101: Intro à la Physique
+        student: { connect: { id: students[3].id } },
+        course: { connect: { id: courses[2].id } },
         status: Status.ENROLLED,
       },
     }),
@@ -208,16 +368,16 @@ async function main() {
     // Lucas Moreau
     prisma.enrollment.create({
       data: {
-        studentId: students[4].id,
-        courseId: courses[0].id, // CS101: Intro à la Programmation
+        student: { connect: { id: students[4].id } },
+        course: { connect: { id: courses[0].id } },
         status: Status.COMPLETED,
         grade: 'A-',
       },
     }),
     prisma.enrollment.create({
       data: {
-        studentId: students[4].id,
-        courseId: courses[1].id, // MATH201: Calcul Avancé
+        student: { connect: { id: students[4].id } },
+        course: { connect: { id: courses[1].id } },
         status: Status.COMPLETED,
         grade: 'A+',
       },
@@ -226,15 +386,15 @@ async function main() {
     // Chloé Roux
     prisma.enrollment.create({
       data: {
-        studentId: students[5].id,
-        courseId: courses[2].id, // PHY101: Intro à la Physique
+        student: { connect: { id: students[5].id } },
+        course: { connect: { id: courses[2].id } },
         status: Status.ENROLLED,
       },
     }),
     prisma.enrollment.create({
       data: {
-        studentId: students[5].id,
-        courseId: courses[1].id, // MATH201: Calcul Avancé
+        student: { connect: { id: students[5].id } },
+        course: { connect: { id: courses[1].id } },
         status: Status.ENROLLED,
       },
     }),

@@ -1,0 +1,5 @@
+-- First migration file (separate)
+-- AlterEnum
+ALTER TYPE "Status" ADD VALUE IF NOT EXISTS 'PENDING';
+ALTER TYPE "Status" ADD VALUE IF NOT EXISTS 'VALIDATED';
+ALTER TYPE "Status" ADD VALUE IF NOT EXISTS 'REJECTED';
