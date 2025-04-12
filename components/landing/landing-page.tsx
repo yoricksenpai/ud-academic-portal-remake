@@ -311,7 +311,7 @@ export function LandingPage() {
               description: "Bienvenue sur votre espace personnel",
               variant: "success",
             })
-            router.push("/dashboard")
+            router.push("/dashboard");
           }}
         />
       )}

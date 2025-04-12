@@ -13,13 +13,13 @@ model Student {
   firstName       String
   lastName        String
   email           String   @unique
+  password        String
   dateOfBirth     DateTime?
   enrolledYear    Int
   major           String?
   enrollments     Enrollment[]
   
   // New fields
-  userId          String?
   academicYear    String
   faculty         String
   program         String
@@ -36,6 +36,7 @@ model Instructor {
   firstName  String
   lastName   String
   email      String    @unique
+  password   String
   department String
   courses    Course[]
   createdAt  DateTime  @default(now())

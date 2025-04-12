@@ -1,9 +1,13 @@
 import { PrismaClient, Status } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const password = "admin123"; // Change avec un vrai mot de passe
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   // Nettoyage de la base de données - optionnel, enlever si vous voulez ajouter aux données existantes
   console.log('🗑️ Nettoyage de la base de données...');
   await prisma.enrollment.deleteMany({});
@@ -19,6 +23,7 @@ async function main() {
         firstName: 'Marie',
         lastName: 'Curie',
         email: 'marie.curie@universite.fr',
+        password: hashedPassword,
         department: 'Sciences Physiques',
       },
     }),
@@ -28,6 +33,7 @@ async function main() {
         firstName: 'Albert',
         lastName: 'Einstein',
         email: 'albert.einstein@universite.fr',
+        password: hashedPassword,
         department: 'Mathématiques',
       },
     }),
@@ -37,6 +43,7 @@ async function main() {
         firstName: 'Ada',
         lastName: 'Lovelace',
         email: 'ada.lovelace@universite.fr',
+        password: hashedPassword,
         department: 'Informatique',
       },
     }),
@@ -46,6 +53,7 @@ async function main() {
         firstName: 'René',
         lastName: 'Descartes',
         email: 'rene.descartes@universite.fr',
+        password: hashedPassword,
         department: 'Philosophie',
       },
     }),
@@ -113,9 +121,14 @@ async function main() {
         firstName: 'Thomas',
         lastName: 'Martin',
         email: 'thomas.martin@etudiant.fr',
+        password: hashedPassword,
         dateOfBirth: new Date('1999-05-15'),
         enrolledYear: 2021,
         major: 'Informatique',
+        academicYear: "2023-2024", 
+        faculty: "Engineering", 
+        program: "Bachelor of Science", 
+        level: "Undergraduate"
       },
     }),
     prisma.student.create({
@@ -124,9 +137,14 @@ async function main() {
         firstName: 'Sophie',
         lastName: 'Dubois',
         email: 'sophie.dubois@etudiant.fr',
+        password: hashedPassword,
         dateOfBirth: new Date('2000-03-22'),
         enrolledYear: 2022,
         major: 'Physique',
+        academicYear: "2023-2024",
+        faculty: "Engineering",
+        program: "Bachelor of Science",
+        level: "Undergraduate"
       },
     }),
     prisma.student.create({
@@ -135,9 +153,14 @@ async function main() {
         firstName: 'Alexandre',
         lastName: 'Petit',
         email: 'alexandre.petit@etudiant.fr',
+        password: hashedPassword,
         dateOfBirth: new Date('1998-11-07'),
         enrolledYear: 2020,
         major: 'Mathématiques',
+        academicYear: "2023-2024",
+        faculty: "Engineering",
+        program: "Bachelor of Science",
+        level: "Undergraduate"
       },
     }),
     prisma.student.create({
@@ -146,9 +169,14 @@ async function main() {
         firstName: 'Emma',
         lastName: 'Leroy',
         email: 'emma.leroy@etudiant.fr',
+        password: hashedPassword,
         dateOfBirth: new Date('2001-09-30'),
         enrolledYear: 2023,
         major: 'Philosophie',
+        academicYear: "2023-2024",
+        faculty: "Engineering",
+        program: "Bachelor of Science",
+        level: "Undergraduate"
       },
     }),
     prisma.student.create({
@@ -157,9 +185,14 @@ async function main() {
         firstName: 'Lucas',
         lastName: 'Moreau',
         email: 'lucas.moreau@etudiant.fr',
+        password: hashedPassword,
         dateOfBirth: new Date('1999-01-18'),
         enrolledYear: 2021,
         major: 'Informatique',
+        academicYear: "2023-2024",
+        faculty: "Engineering",
+        program: "Bachelor of Science",
+        level: "Undergraduate"
       },
     }),
     prisma.student.create({
@@ -168,9 +201,14 @@ async function main() {
         firstName: 'Chloé',
         lastName: 'Roux',
         email: 'chloe.roux@etudiant.fr',
+        password: hashedPassword,
         dateOfBirth: new Date('2000-07-12'),
         enrolledYear: 2022,
         major: 'Physique',
+        academicYear: "2023-2024", 
+        faculty: "Engineering", 
+        program: "Bachelor of Science", 
+        level: "Undergraduate"
       },
     }),
   ]);

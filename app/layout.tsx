@@ -3,8 +3,8 @@ import { Inter, Poppins } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
-import { AuthProvider } from "@/components/auth/auth-provider"
 import { Analytics } from "@/components/analytics"
+import { AuthProvider } from "@/context/UserContext"
 
 // Définition des polices
 const inter = Inter({
@@ -31,7 +31,7 @@ export const metadata = {
     icon: "/favicon.ico",
     apple: "/apple-icon.png",
   },
-    generator: 'v0.dev'
+    generator: 'FN'
 }
 
 export default function RootLayout({

@@ -9,9 +9,50 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BookOpen, CreditCard, GraduationCap, Bell, ChevronRight, AlertCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { useAuth } from "@/context/UserContext"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
+import { fetchApi } from "@/utils/api"
 
 export default function DashboardPage() {
   // Animation variants
+  const { user, token, isLoading, logout } = useAuth();
+  const router = useRouter();
+
+  // Si l'utilisateur n'est pas connecté et que le chargement est terminé, rediriger vers la page de connexion
+  // useEffect(() => {
+  //   if (!isLoading && !token) {
+  //     router.push('/login');
+  //   }
+  // }, [isLoading, token, router]);
+
+  // Exemple de requête API authentifiée
+  // const fetchUserData = async () => {
+  //   try {
+  //     const data = await fetchApi('/api/user/profile');
+  //     console.log('Données utilisateur:', data);
+  //   } catch (error) {
+  //     console.error('Erreur lors de la récupération des données utilisateur:', error);
+  //   }
+  // };
+
+  // // Si le chargement est en cours, afficher un message de chargement
+  // if (isLoading) {
+  //   return (
+  //     <div className="flex min-h-screen items-center justify-center">
+  //       <div className="text-center">
+  //         <div className="mb-4 h-12 w-12 animate-spin rounded-full border-t-2 border-b-2 border-indigo-500 mx-auto"></div>
+  //         <p className="text-lg font-medium text-gray-600">Chargement...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  // // Si l'utilisateur n'est pas connecté, ne rien afficher (la redirection se fera via useEffect)
+  // if (!user || !token) {
+  //   return null;
+  // }
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

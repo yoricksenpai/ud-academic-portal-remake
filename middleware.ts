@@ -1,28 +1,45 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  // Check for auth cookie or custom auth header
-  const authCookie =
-    request.cookies.get("next-auth.session-token")?.value ||
-    request.cookies.get("__Secure-next-auth.session-token")?.value
+export function middleware(req: NextRequest) {
+  // const path = req.nextUrl.pathname;
+  // console.log("Middleware appelé pour:", req.nextUrl.pathname);
+  // console.log("Cookies présents:", req.cookies.getAll());
+  
+  // // Vérifier les cookies pour le token
+  // // Définir les chemins publics qui ne nécessitent pas d'authentification
+  // const publicPaths = ['/', '/', '/api/auth/login', '/api/auth/register', '/'];
+  
+  // // Si l'utilisateur tente d'accéder à une page publique, le laisser passer
+  // if (publicPaths.some(p => path === p || path.startsWith(`${p}/`))) {
+    
+  //   return NextResponse.next();
+  // }
+  
+  // // Vérifier s'il s'agit d'une ressource statique
+  // if (path.startsWith('/_next') || path.includes('.')) {
+  //   return NextResponse.next();
+  // }
+  
+  // // Récupérer le token dans les cookies
+  // const token = req.cookies.get('token')?.value;
+  
+  // console.log("Token trouvé:", !!token);
+  // // Ajouter des logs pour le débogage
+  // console.log(`Middleware: Checking path ${path}, token exists: ${!!token}`);
+  
+  // // Si aucun token n'est fourni ou si le token est invalide
+  // if (!token) {
+  //   // Rediriger vers la page de connexion
+  //   const loginUrl = new URL('/', req.url);
+  //   if (path !== '/') {
+  //     loginUrl.searchParams.set('redirectTo', path);
+  //   }
 
-  // Check for our custom auth in localStorage (via a cookie since localStorage isn't accessible in middleware)
-  const customAuthCookie = request.cookies.get("user-session")?.value
-
-  const isAuthenticated = !!authCookie || !!customAuthCookie
-
-  // Vérifier si l'utilisateur tente d'accéder à une page protégée
-  if (request.nextUrl.pathname.startsWith("/dashboard") && !isAuthenticated) {
-    // Rediriger vers la page de connexion
-    const url = new URL("/", request.url)
-    return NextResponse.redirect(url)
-  }
-
-  return NextResponse.next()
+  //   console.log(`Middleware: Redirecting to ${loginUrl.toString()}`);
+  //   return NextResponse.redirect(loginUrl);
+  // }
+  
+  // Vérifier le token ici si vous le souhaitez
+  // Si le token est valide, autoriser l'accès
+  return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*"],
-}
-

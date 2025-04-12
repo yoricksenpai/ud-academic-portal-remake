@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('ENROLLED', 'COMPLETED', 'DROPPED', 'WAITLISTED');
+CREATE TYPE "Status" AS ENUM ('PENDING', 'VALIDATED', 'REJECTED', 'ENROLLED', 'COMPLETED', 'DROPPED', 'WAITLISTED');
 
 -- CreateTable
 CREATE TABLE "Student" (
@@ -8,9 +8,16 @@ CREATE TABLE "Student" (
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "dateOfBirth" TIMESTAMP(3),
     "enrolledYear" INTEGER NOT NULL,
     "major" TEXT,
+    "academicYear" TEXT NOT NULL,
+    "faculty" TEXT NOT NULL,
+    "program" TEXT NOT NULL,
+    "level" TEXT NOT NULL,
+    "registrationDate" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "status" "Status" NOT NULL DEFAULT 'PENDING',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -24,6 +31,7 @@ CREATE TABLE "Instructor" (
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "department" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -44,6 +52,24 @@ CREATE TABLE "Course" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Course_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ClassSession" (
+    "id" SERIAL NOT NULL,
+    "courseId" INTEGER NOT NULL,
+    "day" TEXT NOT NULL,
+    "startTime" TEXT NOT NULL,
+    "endTime" TEXT NOT NULL,
+    "location" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "repeatWeekly" BOOLEAN NOT NULL DEFAULT true,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ClassSession_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -79,6 +105,9 @@ CREATE UNIQUE INDEX "Enrollment_studentId_courseId_key" ON "Enrollment"("student
 
 -- AddForeignKey
 ALTER TABLE "Course" ADD CONSTRAINT "Course_instructorId_fkey" FOREIGN KEY ("instructorId") REFERENCES "Instructor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ClassSession" ADD CONSTRAINT "ClassSession_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Enrollment" ADD CONSTRAINT "Enrollment_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
